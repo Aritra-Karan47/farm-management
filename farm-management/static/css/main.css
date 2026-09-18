@@ -1,0 +1,98 @@
+:root {
+  --green: #2f6b3a;
+  --green-dark: #234f2b;
+  --tan: #f5f1e8;
+  --ink: #2b2620;
+  --muted: #6b6459;
+  --border: #e2dccb;
+  --warn: #b5502e;
+  --card-bg: #ffffff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--tan);
+  color: var(--ink);
+}
+
+.topbar {
+  background: var(--green-dark);
+  color: #fff;
+  padding: 0.9rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar a { color: #fff; text-decoration: none; }
+.topbar .brand { font-weight: 700; font-size: 1.1rem; }
+.topbar nav a { margin-left: 1.25rem; opacity: 0.9; font-size: 0.92rem; }
+.topbar nav a:hover { opacity: 1; text-decoration: underline; }
+
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.grid-kpi { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+
+.kpi-value { font-size: 1.9rem; font-weight: 700; color: var(--green-dark); }
+.kpi-label { font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+
+h1, h2, h3 { color: var(--green-dark); margin-top: 0; }
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.15rem; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); text-align: left; }
+th { color: var(--muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
+
+.badge {
+  display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 600; background: #e7f0e5; color: var(--green-dark);
+}
+.badge.status-SICK, .badge.status-QUARANTINE { background: #fbe6df; color: var(--warn); }
+.badge.status-SOLD, .badge.status-DEAD, .badge.status-CULLED { background: #ececec; color: var(--muted); }
+.badge.status-PREGNANT { background: #eee3f7; color: #6b3fa0; }
+
+form.filters { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem; }
+form.filters input, form.filters select {
+  padding: 0.45rem 0.6rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem;
+}
+.btn {
+  display: inline-block; background: var(--green); color: #fff; border: none;
+  padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; cursor: pointer; text-decoration: none;
+}
+.btn:hover { background: var(--green-dark); }
+
+.empty { color: var(--muted); font-style: italic; padding: 0.75rem 0; }
+
+.login-wrap {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+}
+.login-card { width: 100%; max-width: 360px; }
+.login-card input {
+  width: 100%; padding: 0.6rem; margin: 0.35rem 0 0.9rem; border: 1px solid var(--border); border-radius: 6px;
+}
+
+.section-tabs { display: flex; gap: 1rem; border-bottom: 1px solid var(--border); margin: 1.25rem 0 0.75rem; flex-wrap: wrap; }
+.section-tabs .tab { padding-bottom: 0.5rem; font-weight: 600; color: var(--muted); font-size: 0.9rem; }
+
+.pagination { display: flex; gap: 0.5rem; margin-top: 1rem; font-size: 0.9rem; }

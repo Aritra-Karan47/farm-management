@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<h1>Basic Reports — {{ farm.name }}</h1>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Animal Summary</h2>
+    <table>
+      <tr><th>Total Animals</th><td>{{ animal_kpis.total }}</td></tr>
+      <tr><th>Female</th><td>{{ animal_kpis.female }}</td></tr>
+      <tr><th>Male/Bucks</th><td>{{ animal_kpis.male }}</td></tr>
+      <tr><th>Kids</th><td>{{ animal_kpis.kids }}</td></tr>
+      <tr><th>Pregnant</th><td>{{ animal_kpis.pregnant }}</td></tr>
+      <tr><th>Sick</th><td>{{ animal_kpis.sick }}</td></tr>
+      <tr><th>Quarantine</th><td>{{ animal_kpis.quarantine }}</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>This Month's Financials</h2>
+    <table>
+      <tr><th>Kids Born</th><td>{{ performance.kids_born }}</td></tr>
+      <tr><th>Animals Sold</th><td>{{ performance.kids_sold }}</td></tr>
+      <tr><th>Mortality</th><td>{{ performance.mortality }}</td></tr>
+      <tr><th>Sales</th><td>₹{{ performance.sales_this_month }}</td></tr>
+      <tr><th>Expenses</th><td>₹{{ performance.expenses_this_month }}</td></tr>
+      <tr><th>Net Profit</th><td>₹{{ performance.net_profit }}</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Recent Sales</h2>
+    {% if recent_sales %}
+    <table>
+      <thead><tr><th>Animal</th><th>Buyer</th><th>Date</th><th>Amount</th></tr></thead>
+      <tbody>
+      {% for s in recent_sales %}
+        <tr><td>{{ s.animal.tag_no }}</td><td>{{ s.buyer }}</td><td>{{ s.sale_date }}</td><td>₹{{ s.total_amount }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="empty">No sales recorded yet.</p>{% endif %}
+  </div>
+
+  <div class="card">
+    <h2>Recent Expenses</h2>
+    {% if recent_expenses %}
+    <table>
+      <thead><tr><th>Category</th><th>Description</th><th>Date</th><th>Amount</th></tr></thead>
+      <tbody>
+      {% for e in recent_expenses %}
+        <tr><td>{{ e.get_category_display }}</td><td>{{ e.description }}</td><td>{{ e.expense_date }}</td><td>₹{{ e.amount }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="empty">No expenses recorded yet.</p>{% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Animals{% endblock %}
+{% block content %}
+
+<h1>Animals</h1>
+
+<form class="filters" method="get">
+  <input type="text" name="q" placeholder="Search tag no. or name" value="{{ query_params.q|default:'' }}">
+  <select name="category">
+    <option value="">All Categories</option>
+    <option value="female" {% if query_params.category == "female" %}selected{% endif %}>Female</option>
+    <option value="male" {% if query_params.category == "male" %}selected{% endif %}>Buck/Male</option>
+    <option value="kids" {% if query_params.category == "kids" %}selected{% endif %}>Kids</option>
+  </select>
+  <select name="breed">
+    <option value="">All Breeds</option>
+    {% for b in breeds %}
+      <option value="{{ b.id }}" {% if query_params.breed == b.id|stringformat:"s" %}selected{% endif %}>{{ b.name }}</option>
+    {% endfor %}
+  </select>
+  <select name="status">
+    <option value="">All Statuses</option>
+    {% for code, label in status_choices %}
+      <option value="{{ code }}" {% if query_params.status == code %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <select name="location">
+    <option value="">All Sheds</option>
+    {% for l in locations %}
+      <option value="{{ l.id }}" {% if query_params.location == l.id|stringformat:"s" %}selected{% endif %}>{{ l.name }}</option>
+    {% endfor %}
+  </select>
+  <button class="btn" type="submit">Filter</button>
+  <a class="btn" href="/admin/animals/animal/add/" style="background:#6b6459;">+ Add Animal</a>
+</form>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr><th>Tag No.</th><th>Name</th><th>Gender</th><th>Breed</th><th>Age / DOB</th><th>Weight</th><th>Status</th><th>Shed</th></tr>
+    </thead>
+    <tbody>
+      {% for animal in page_obj %}
+      <tr>
+        <td><a href="{% url 'animals:profile' animal.pk %}">{{ animal.tag_no }}</a></td>
+        <td>{{ animal.name|default:"—" }}</td>
+        <td>{{ animal.get_gender_display }}</td>
+        <td>{{ animal.breed }}</td>
+        <td>{{ animal.date_of_birth|default:"—" }}</td>
+        <td>{{ animal.current_weight|default:"—" }} kg</td>
+        <td><span class="badge status-{{ animal.status }}">{{ animal.get_status_display }}</span></td>
+        <td>{{ animal.location|default:"—" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8" class="empty">No animals found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">← Prev</a>{% endif %}
+  <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Next →</a>{% endif %}
+</div>
+
+{% endblock %}

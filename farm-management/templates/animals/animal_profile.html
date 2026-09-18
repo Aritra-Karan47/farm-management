@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}{{ animal.tag_no }}{% endblock %}
+{% block content %}
+
+<a href="{% url 'animals:list' %}">← Back to Animals</a>
+
+<h1 style="margin-top:0.5rem;">{{ animal.tag_no }} {% if animal.name %}— {{ animal.name }}{% endif %}
+  <span class="badge status-{{ animal.status }}">{{ animal.get_status_display }}</span>
+</h1>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h2>Basic Information</h2>
+    <table>
+      <tr><th>Gender</th><td>{{ animal.get_gender_display }}</td></tr>
+      <tr><th>Breed</th><td>{{ animal.breed }}</td></tr>
+      <tr><th>Date of Birth</th><td>{{ animal.date_of_birth|default:"—" }}</td></tr>
+      <tr><th>Mother</th><td>{% if animal.mother %}<a href="{% url 'animals:profile' animal.mother.pk %}">{{ animal.mother.tag_no }}</a>{% else %}—{% endif %}</td></tr>
+      <tr><th>Father</th><td>{% if animal.father %}<a href="{% url 'animals:profile' animal.father.pk %}">{{ animal.father.tag_no }}</a>{% else %}—{% endif %}</td></tr>
+      <tr><th>Color</th><td>{{ animal.color|default:"—" }}</td></tr>
+      <tr><th>Birth Weight</th><td>{{ animal.birth_weight|default:"—" }} kg</td></tr>
+      <tr><th>Current Weight</th><td>{{ animal.current_weight|default:"—" }} kg</td></tr>
+      <tr><th>ADG</th><td>{{ adg|default:"—" }} kg/day</td></tr>
+      <tr><th>Source</th><td>{{ animal.get_source_display }}</td></tr>
+      <tr><th>Shed/Location</th><td>{{ animal.location|default:"—" }}</td></tr>
+      <tr><th>Remarks</th><td>{{ animal.remarks|default:"—" }}</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Weight History</h2>
+    {% if weight_records %}
+    <table>
+      <thead><tr><th>Date</th><th>Weight (kg)</th><th>Method</th></tr></thead>
+      <tbody>
+      {% for w in weight_records %}
+        <tr><td>{{ w.weight_date }}</td><td>{{ w.weight_kg }}</td><td>{{ w.get_weight_method_display }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="empty">No weight records yet.</p>{% endif %}
+  </div>
+
+  <div class="card">
+    <h2>Vaccinations</h2>
+    {% if vaccinations %}
+    <table>
+      <thead><tr><th>Date</th><th>Vaccine</th><th>Next Due</th></tr></thead>
+      <tbody>
+      {% for v in vaccinations %}
+        <tr><td>{{ v.date }}</td><td>{{ v.vaccine }}</td><td>{{ v.next_due_date|default:"—" }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="empty">No vaccination records yet.</p>{% endif %}
+  </div>
+
+  <div class="card">
+    <h2>Deworming</h2>
+    {% if dewormings %}
+    <table>
+      <thead><tr><th>Date</th><th>Medicine</th><th>Next Due</th></tr></thead>
+      <tbody>
+      {% for d in dewormings %}
+        <tr><td>{{ d.date }}</td><td>{{ d.medicine }}</td><td>{{ d.next_due_date|default:"—" }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="empty">No deworming records yet.</p>{% endif %}
+  </div>
+
+  <div class="card">
+    <h2>Treatments</h2>
+    {% if treatments %}
+    <table>
+      <thead><tr><th>Date</th><th>Diagnosis</th><th>Follow-up</th></tr></thead>
+      <tbody>
+      {% for t in treatments %}
+        <tr><td>{{ t.date }}</td><td>{{ t.diagnosis|default:"—" }}</td><td>{{ t.follow_up_date|default:"—" }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="empty">No treatment records yet.</p>{% endif %}
+  </div>
+
+  {% if animal.gender == "FEMALE" %}
+  <div class="card">
+    <h2>Breeding</h2>
+    {% if breeding_records %}
+    <table>
+      <thead><tr><th>Mating Date</th><th>Expected Delivery</th><th>Status</th></tr></thead>
+      <tbody>
+      {% for b in breeding_records %}
+        <tr><td>{{ b.mating_date|default:"—" }}</td><td>{{ b.expected_delivery_date|default:"—" }}</td><td>{{ b.get_pregnancy_status_display }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="empty">No breeding records yet.</p>{% endif %}
+  </div>
+
+  <div class="card">
+    <h2>Kidding</h2>
+    {% if kidding_records %}
+    <table>
+      <thead><tr><th>Date</th><th>Total Kids</th><th>Male</th><th>Female</th></tr></thead>
+      <tbody>
+      {% for k in kidding_records %}
+        <tr><td>{{ k.kidding_date }}</td><td>{{ k.number_of_kids }}</td><td>{{ k.male_kids }}</td><td>{{ k.female_kids }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="empty">No kidding records yet.</p>{% endif %}
+  </div>
+  {% endif %}
+
+  <div class="card">
+    <h2>Offspring</h2>
+    {% if offspring %}
+    <table>
+      <thead><tr><th>Tag No.</th><th>Gender</th><th>DOB</th></tr></thead>
+      <tbody>
+      {% for o in offspring %}
+        <tr><td><a href="{% url 'animals:profile' o.pk %}">{{ o.tag_no }}</a></td><td>{{ o.get_gender_display }}</td><td>{{ o.date_of_birth|default:"—" }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}<p class="empty">No offspring recorded.</p>{% endif %}
+  </div>
+
+  <div class="card">
+    <h2>Sale / Status</h2>
+    {% if sale_record %}
+      <table>
+        <tr><th>Sale Date</th><td>{{ sale_record.sale_date }}</td></tr>
+        <tr><th>Buyer</th><td>{{ sale_record.buyer }}</td></tr>
+        <tr><th>Live Weight</th><td>{{ sale_record.live_weight }} kg</td></tr>
+        <tr><th>Rate/kg</th><td>₹{{ sale_record.rate_per_kg }}</td></tr>
+        <tr><th>Total Amount</th><td>₹{{ sale_record.total_amount }}</td></tr>
+      </table>
+    {% else %}
+      <p class="empty">Not sold. Current status: {{ animal.get_status_display }}</p>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

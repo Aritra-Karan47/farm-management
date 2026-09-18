@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+{% if not farm %}
+  <div class="card">
+    <h1>Welcome</h1>
+    <p>Your account isn't linked to a farm yet. Ask an administrator to add you as staff on a farm
+      in <a href="/admin/staff/staffmembership/add/">Admin → Staff → Staff Memberships</a>.</p>
+  </div>
+{% else %}
+
+<h1>Farm Command Center — {{ farm.name }}</h1>
+
+<h2>Animals</h2>
+<div class="grid grid-kpi">
+  <div class="card"><div class="kpi-value">{{ animal_kpis.total }}</div><div class="kpi-label">Total Animals</div></div>
+  <div class="card"><div class="kpi-value">{{ animal_kpis.female }}</div><div class="kpi-label">Female</div></div>
+  <div class="card"><div class="kpi-value">{{ animal_kpis.male }}</div><div class="kpi-label">Male / Bucks</div></div>
+  <div class="card"><div class="kpi-value">{{ animal_kpis.kids }}</div><div class="kpi-label">Kids</div></div>
+  <div class="card"><div class="kpi-value">{{ animal_kpis.pregnant }}</div><div class="kpi-label">Pregnant</div></div>
+  <div class="card"><div class="kpi-value">{{ animal_kpis.sick }}</div><div class="kpi-label">Sick</div></div>
+  <div class="card"><div class="kpi-value">{{ animal_kpis.quarantine }}</div><div class="kpi-label">Quarantine</div></div>
+</div>
+
+<h2 style="margin-top:1.5rem;">Farm Performance — This Month</h2>
+<div class="grid grid-kpi">
+  <div class="card"><div class="kpi-value">{{ performance.kids_born }}</div><div class="kpi-label">Kids Born</div></div>
+  <div class="card"><div class="kpi-value">{{ performance.kids_sold }}</div><div class="kpi-label">Kids/Animals Sold</div></div>
+  <div class="card"><div class="kpi-value">{{ performance.mortality }}</div><div class="kpi-label">Mortality</div></div>
+  <div class="card"><div class="kpi-value">₹{{ performance.sales_this_month }}</div><div class="kpi-label">Sales</div></div>
+  <div class="card"><div class="kpi-value">₹{{ performance.expenses_this_month }}</div><div class="kpi-label">Expenses</div></div>
+  <div class="card"><div class="kpi-value">₹{{ performance.net_profit }}</div><div class="kpi-label">Net Profit</div></div>
+</div>
+
+<h2 style="margin-top:1.5rem;">Upcoming Activities (next 7 days)</h2>
+<div class="grid grid-2">
+  <div class="card">
+    <h3>Vaccination Due</h3>
+    {% if activities.vaccinations_due %}
+      <table><tbody>
+      {% for v in activities.vaccinations_due %}
+        <tr><td><a href="{% url 'animals:profile' v.animal.pk %}">{{ v.animal.tag_no }}</a></td><td>{{ v.vaccine }}</td><td>{{ v.next_due_date }}</td></tr>
+      {% endfor %}
+      </tbody></table>
+    {% else %}<p class="empty">Nothing due.</p>{% endif %}
+  </div>
+
+  <div class="card">
+    <h3>Deworming Due</h3>
+    {% if activities.dewormings_due %}
+      <table><tbody>
+      {% for d in activities.dewormings_due %}
+        <tr><td><a href="{% url 'animals:profile' d.animal.pk %}">{{ d.animal.tag_no }}</a></td><td>{{ d.medicine }}</td><td>{{ d.next_due_date }}</td></tr>
+      {% endfor %}
+      </tbody></table>
+    {% else %}<p class="empty">Nothing due.</p>{% endif %}
+  </div>
+
+  <div class="card">
+    <h3>Treatment Follow-up</h3>
+    {% if activities.treatment_followups %}
+      <table><tbody>
+      {% for t in activities.treatment_followups %}
+        <tr><td><a href="{% url 'animals:profile' t.animal.pk %}">{{ t.animal.tag_no }}</a></td><td>{{ t.diagnosis|default:"—" }}</td><td>{{ t.follow_up_date }}</td></tr>
+      {% endfor %}
+      </tbody></table>
+    {% else %}<p class="empty">Nothing due.</p>{% endif %}
+  </div>
+
+  <div class="card">
+    <h3>Expected Kidding</h3>
+    {% if activities.expected_kiddings %}
+      <table><tbody>
+      {% for b in activities.expected_kiddings %}
+        <tr><td><a href="{% url 'animals:profile' b.female_animal.pk %}">{{ b.female_animal.tag_no }}</a></td><td>{{ b.expected_delivery_date }}</td></tr>
+      {% endfor %}
+      </tbody></table>
+    {% else %}<p class="empty">None expected.</p>{% endif %}
+  </div>
+</div>
+
+{% if feed_alerts %}
+<h2 style="margin-top:1.5rem;">⚠ Low Feed Stock</h2>
+<div class="card">
+  <table>
+    <thead><tr><th>Feed</th><th>Stock</th><th>Minimum</th></tr></thead>
+    <tbody>
+    {% for f in feed_alerts %}
+      <tr><td>{{ f.feed_name }}</td><td>{{ f.stock_quantity }} {{ f.unit }}</td><td>{{ f.minimum_stock }} {{ f.unit }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}
